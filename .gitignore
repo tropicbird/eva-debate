@@ -1,6 +1,9 @@
 # reset.sh が作る debate.md のバックアップ
 debate.md.backup.*
 
+# start_debate.sh が書き込むセッション状態（autonudge.sh が読む）
+.debate_state
+
 # Claude Code のローカル設定（マシン固有）
 .claude/settings.local.json
 
