@@ -74,15 +74,18 @@ tmux kill-session -t debate 2>/dev/null || true
 tmux new-session -d -s debate -x 240 -y 50
 tmux split-window -h -t debate:0
 
-tmux set-option -t debate pane-border-status top
+tmux set-option -w -t debate:0 pane-border-status top
+# #T（pane_title）は Claude Code が OSC で上書きしてしまうので、
+# ペイン単位のユーザーオプション @label を使う（外から書き込んだ値が保持される）
+tmux set-option -w -t debate:0 pane-border-format " #{pane_index}: #{@label} "
 
 # 左ペイン
-tmux select-pane -t debate:0.0 -T "$TITLE_LEFT"
+tmux set-option -p -t debate:0.0 @label "$TITLE_LEFT"
 tmux send-keys -t debate:0.0 \
   "cd $PROJECT_DIR && claude --dangerously-skip-permissions --append-system-prompt \"\$(cat characters/$CHAR_LEFT.md)\"" Enter
 
 # 右ペイン
-tmux select-pane -t debate:0.1 -T "$TITLE_RIGHT"
+tmux set-option -p -t debate:0.1 @label "$TITLE_RIGHT"
 tmux send-keys -t debate:0.1 \
   "cd $PROJECT_DIR && claude --dangerously-skip-permissions --append-system-prompt \"\$(cat characters/$CHAR_RIGHT.md)\"" Enter
 
